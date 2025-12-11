@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geminus.js - Browser Test Suite</title>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/css/tabler.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .test-case {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid #ddd;
+            background: #fafafa;
+        }
+        .test-case.pass {
+            border-left-color: #28a745;
+            background: #f1f9f6;
+        }
+        .test-case.fail {
+            border-left-color: #dc3545;
+            background: #f9f1f3;
+        }
+        .test-case.running {
+            border-left-color: #ffc107;
+            background: #fffcf0;
+        }
+        .test-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .test-result {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-family: monospace;
+        }
+        .btn-group {
+            margin-bottom: 15px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status-badge.pass {
+            background: #28a745;
+            color: white;
+        }
+        .status-badge.fail {
+            background: #dc3545;
+            color: white;
+        }
+        .status-badge.pending {
+            background: #6c757d;
+            color: white;
+        }
+        .form-demo {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        .demo-form {
+            margin-top: 15px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            padding: 8px 16px;
+            margin-right: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #0066cc;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0052a3;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .console-log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .log-line {
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+        .log-info {
+            color: #00ff00;
+        }
+        .log-error {
+            color: #ff4444;
+        }
+        .log-warn {
+            color: #ffaa00;
+        }
+        .log-success {
+            color: #00dd00;
+        }
+    </style>
+    <meta name="csrf-hash" content="test_csrf_token_12345">
+    <meta name="csrf-name" content="csrf_test_name">
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Geminus.js - Browser Test Suite</h1>
+        
+        <!-- Test Controls -->
+        <div class="test-section">
+            <h2>Test Controls</h2>
+            <div class="btn-group">
+                <button class="btn-primary" onclick="runAllTests()">Run All Tests</button>
+                <button class="btn-secondary" onclick="runCoreTests()">Run Core Tests</button>
+                <button class="btn-secondary" onclick="clearConsole()">Clear Console</button>
+            </div>
+            <div id="test-summary" style="margin-top: 10px; font-weight: bold;"></div>
+        </div>
+
+        <!-- 1. Core HTTP Module Tests -->
+        <div class="test-section">
+            <h2>1. Core HTTP Module Tests</h2>
+            <div class="test-case" id="test-http-1">
+                <div class="test-label">✓ sendRequest with JSON response</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testHTTP1()">Run</button>
+                <div class="test-result" id="result-http-1"></div>
+            </div>
+            <div class="test-case" id="test-http-2">
+                <div class="test-label">✓ sendRequest with network error</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testHTTP2()">Run</button>
+                <div class="test-result" id="result-http-2"></div>
+            </div>
+            <div class="test-case" id="test-http-3">
+                <div class="test-label">✓ sendRequest with invalid URL</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testHTTP3()">Run</button>
+                <div class="test-result" id="result-http-3"></div>
+            </div>
+        </div>
+
+        <!-- 2. CSRF Token Module Tests -->
+        <div class="test-section">
+            <h2>2. CSRF Token Module Tests</h2>
+            <div class="test-case" id="test-csrf-1">
+                <div class="test-label">✓ getCsrfToken from meta tag</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testCSRF1()">Run</button>
+                <div class="test-result" id="result-csrf-1"></div>
+            </div>
+            <div class="test-case" id="test-csrf-2">
+                <div class="test-label">✓ updateCsrfToken</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testCSRF2()">Run</button>
+                <div class="test-result" id="result-csrf-2"></div>
+            </div>
+        </div>
+
+        <!-- 3. Notification Adapter Tests -->
+        <div class="test-section">
+            <h2>3. Notification Adapter Tests</h2>
+            <div class="test-case" id="test-notif-1">
+                <div class="test-label">✓ Show success notification</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testNOTIF1()">Run</button>
+                <div class="test-result" id="result-notif-1"></div>
+            </div>
+            <div class="test-case" id="test-notif-2">
+                <div class="test-label">✓ Show error notification</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testNOTIF2()">Run</button>
+                <div class="test-result" id="result-notif-2"></div>
+            </div>
+            <div class="test-case" id="test-notif-3">
+                <div class="test-label">✓ Custom notification adapter</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testNOTIF3()">Run</button>
+                <div class="test-result" id="result-notif-3"></div>
+            </div>
+        </div>
+
+        <!-- 4. Form Submission Tests -->
+        <div class="test-section">
+            <h2>4. Form Submission Module Tests</h2>
+            <div class="test-case" id="test-form-1">
+                <div class="test-label">✓ Form binding and event attachment</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testFORM1()">Run</button>
+                <div class="test-result" id="result-form-1"></div>
+            </div>
+            <div class="test-case" id="test-form-2">
+                <div class="test-label">✓ Form carries CSRF token</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testFORM2()">Run</button>
+                <div class="test-result" id="result-form-2"></div>
+            </div>
+            <div class="test-case" id="test-form-3">
+                <div class="test-label">✓ Form validation error</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testFORM3()">Run</button>
+                <div class="test-result" id="result-form-3"></div>
+            </div>
+            <div class="test-case" id="test-form-4">
+                <div class="test-label">✓ Form redirect after success</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testFORM4()">Run</button>
+                <div class="test-result" id="result-form-4"></div>
+            </div>
+            <div class="test-case" id="test-form-5">
+                <div class="test-label">✓ Form reload after success</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testFORM5()">Run</button>
+                <div class="test-result" id="result-form-5"></div>
+            </div>
+            
+            <div class="form-demo">
+                <h4>📋 Demo Form</h4>
+                                <form id="demoForm" action="/api/submit-form" method="POST" class="demo-form">
+                    <div class="mb-3">
+                        <label class="form-label" for="name">Full Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="message">Message:</label>
+                        <textarea class="form-control" id="message" name="message" rows="4"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Subscription Type:</label>
+                        <div data-field-name="subscription">
+                            <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="subscription" value="free">
+                                <span class="form-check-label">Free</span>
+                            </label>
+                            <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="subscription" value="premium">
+                                <span class="form-check-label">Premium</span>
+                            </label>
+                        </div>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-check">
+                            <input class="form-check-input" type="checkbox" name="terms">
+                            <span class="form-check-label">I agree to the terms and conditions</span>
+                            <div class="invalid-feedback"></div>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary">Submit Form</button>
+                    <button type="reset" class="btn-secondary">Reset</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 5. AJAX Request Module Tests -->
+        <div class="test-section">
+            <h2>5. AJAX Request Module Tests</h2>
+            <div class="test-case" id="test-ajax-1">
+                <div class="test-label">✓ AJAX POST request</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testAJAX1()">Run</button>
+                <div class="test-result" id="result-ajax-1"></div>
+            </div>
+            <div class="test-case" id="test-ajax-2">
+                <div class="test-label">✓ AJAX with confirmation dialog</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testAJAX2()">Run</button>
+                <div class="test-result" id="result-ajax-2"></div>
+            </div>
+            <div class="test-case" id="test-ajax-3">
+                <div class="test-label">✓ AJAX with loading state</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testAJAX3()">Run</button>
+                <div class="test-result" id="result-ajax-3"></div>
+            </div>
+            <div class="test-case" id="test-ajax-4">
+                <div class="test-label">✓ AJAX Redirect</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testAJAX4()">Run</button>
+                <div class="test-result" id="result-ajax-4"></div>
+            </div>
+            <div class="test-case" id="test-ajax-5">
+                <div class="test-label">✓ AJAX Reload</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testAJAX5()">Run</button>
+                <div class="test-result" id="result-ajax-5"></div>
+            </div>
+
+            <div class="form-demo">
+                <h4>🔘 Demo Buttons</h4>
+                <div style="margin-bottom: 15px;">
+                    <button class="btn-primary" id="deleteBtn" onclick="testDeleteAction()">Delete Item (with confirmation)</button>
+                    <button class="btn-secondary" onclick="testAjaxAction()">Toggle Status</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Console Output -->
+        <div class="test-section">
+            <h2>📊 Test Console Output</h2>
+            <div class="console-log" id="testConsole"></div>
+        </div>
+    </div>
+
+    
+
+    <!-- Mock /api/* endpoints to avoid 404s during local browser testing -->
+    <script>
+        const originalFetch = window.fetch;
+        window.fetch = async (input, init = {}) => {
+            const url = typeof input === 'string' ? input : input.url;
+            
+            // Add artificial delay for loading tests to make spinner visible
+            if (url && url.includes('loading')) {
+                await new Promise(r => setTimeout(r, 1500));
+            }
+
+            // Simulate network error
+            if (url && url.includes('network-error')) {
+                throw new TypeError('Network request failed');
+            }
+
+            // Simulate server error
+            if (url && url.includes('server-error')) {
+                return new Response(JSON.stringify({ message: 'Server Error' }), { 
+                    status: 500, 
+                    statusText: 'Internal Server Error',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+
+            // Simulate form validation error
+            if (url && url.includes('form-error')) {
+                return new Response(JSON.stringify({ 
+                    message: 'Validation Failed',
+                    errors: {
+                        email: 'Invalid email format',
+                        message: 'Message is too short',
+                        subscription: 'Please select a subscription plan',
+                        terms: 'You must agree to the terms'
+                    }
+                }), { 
+                    status: 422, 
+                    statusText: 'Unprocessable Entity',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+
+            // Simulate redirect
+            if (url && url.includes('redirect-test')) {
+                 return new Response(JSON.stringify({ 
+                    message: 'Success! Redirecting in 2 seconds...',
+                    redirectUrl: window.location.href.split('?')[0] + '?redirected=true'
+                }), { 
+                    status: 200, 
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+            
+            // Simulate reload
+            if (url && url.includes('reload-test')) {
+                 return new Response(JSON.stringify({ 
+                    message: 'Success! Reloading in 2 seconds...'
+                }), { 
+                    status: 200, 
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+
+            if (url && url.startsWith('/api/')) {
+                // Add a small delay to visualize loading state
+                await new Promise(r => setTimeout(r, 1000));
+
+                // Simulate a minimal successful JSON response structure used by the tests
+                const payload = { message: 'OK (mocked)', data: { url, method: (init && init.method) || 'GET' } };
+                const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+                const responseInit = { status: 200, statusText: 'OK', headers: { 'Content-Type': 'application/json' } };
+                return new Response(blob, responseInit);
+            }
+            return originalFetch(input, init);
+        };
+    </script>
+    
+    <script type="module">
+        import {
+            sendRequest,
+            getCsrfToken,
+            updateCsrfToken,
+            showNotification,
+            setUIAdapter,
+            getUIAdapter,
+            UIAdapter,
+            TablerUIAdapter,
+            submitForm,
+            ajaxRequest
+        } from '../lib/index.js';
+
+        // Initialize Tabler adapter
+        setUIAdapter(new TablerUIAdapter());
+
+        // Console logging utility
+        window.testLog = (message, type = 'info') => {
+            const console = document.getElementById('testConsole');
+            const line = document.createElement('div');
+            line.className = `log-line log-${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            line.textContent = `[${timestamp}] ${message}`;
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        };
+
+        // Test execution helpers
+        window.passTest = (testId) => {
+            const elem = document.getElementById(`test-${testId}`);
+            elem.classList.remove('fail', 'running');
+            elem.classList.add('pass');
+            window.testLog(`✓ Test ${testId} passed`, 'success');
+        };
+
+        window.failTest = (testId, error) => {
+            const elem = document.getElementById(`test-${testId}`);
+            elem.classList.remove('pass', 'running');
+            elem.classList.add('fail');
+            const resultElem = document.getElementById(`result-${testId}`);
+            resultElem.innerHTML = `<span style="color: red;">✗ ${error}</span>`;
+            window.testLog(`✗ Test ${testId} failed: ${error}`, 'error');
+        };
+
+        window.runTest = (testId) => {
+            const elem = document.getElementById(`test-${testId}`);
+            elem.classList.remove('pass', 'fail');
+            elem.classList.add('running');
+        };
+
+        // Expose functions globally for test buttons
+        window.testHTTP1 = async () => {
+            window.runTest('http-1');
+            try {
+                // Real call to sendRequest
+                const { response, data, error } = await sendRequest('/api/test-success');
+                if (!error && response.ok && data.message === 'OK (mocked)') {
+                    window.passTest('http-1');
+                } else {
+                    window.failTest('http-1', 'Response not OK or data mismatch');
+                }
+            } catch (err) {
+                window.failTest('http-1', err.message);
+            }
+        };
+
+        window.testHTTP2 = async () => {
+            window.runTest('http-2');
+            try {
+                // Real call to sendRequest with network error simulation
+                const { error } = await sendRequest('/api/network-error');
+                if (error) {
+                    window.passTest('http-2');
+                    window.testLog(`Caught expected error: ${error.message}`, 'success');
+                } else {
+                    window.failTest('http-2', 'Expected network error but got success');
+                }
+            } catch (err) {
+                window.failTest('http-2', err.message);
+            }
+        };
+
+        window.testHTTP3 = async () => {
+            window.runTest('http-3');
+            try {
+                // Real call with invalid URL (should be handled by fetch or browser)
+                // Note: fetch might not throw on all invalid URLs, but let's try a scheme that fetch supports but fails
+                // or just rely on the fact that our mock only handles /api/
+                const { response, error } = await sendRequest('/invalid-url');
+                
+                // Since our mock passes through to originalFetch for non-/api/, 
+                // and this is a file:// or local server context, it will likely 404 or fail.
+                if (error || !response.ok) {
+                    window.passTest('http-3');
+                } else {
+                    window.failTest('http-3', 'Expected failure for invalid URL');
+                }
+            } catch (err) {
+                // If it throws, that's also a pass for "handling invalid URL"
+                window.passTest('http-3');
+            }
+        };
+
+        window.testCSRF1 = () => {
+            window.runTest('csrf-1');
+            try {
+                const csrf = getCsrfToken();
+                if (csrf && csrf.value === 'test_csrf_token_12345') {
+                    window.passTest('csrf-1');
+                    window.testLog(`CSRF Token: ${csrf.value}`, 'info');
+                } else {
+                    window.failTest('csrf-1', 'CSRF token not found or invalid');
+                }
+            } catch (err) {
+                window.failTest('csrf-1', err.message);
+            }
+        };
+
+        window.testCSRF2 = () => {
+            window.runTest('csrf-2');
+            try {
+                const oldValue = getCsrfToken()?.value;
+                updateCsrfToken({ name: 'csrf_test_name', hash: 'new_token_xyz' });
+                const newValue = getCsrfToken()?.value;
+                if (newValue === 'new_token_xyz') {
+                    window.passTest('csrf-2');
+                    window.testLog(`CSRF updated: ${oldValue} → ${newValue}`, 'info');
+                } else {
+                    window.failTest('csrf-2', 'CSRF update failed');
+                }
+            } catch (err) {
+                window.failTest('csrf-2', err.message);
+            }
+        };
+
+        window.testNOTIF1 = () => {
+            window.runTest('notif-1');
+            try {
+                showNotification('✓ Success notification test', 'success', 2000);
+                window.passTest('notif-1');
+                window.testLog('Success notification shown', 'success');
+            } catch (err) {
+                window.failTest('notif-1', err.message);
+            }
+        };
+
+        window.testNOTIF2 = () => {
+            window.runTest('notif-2');
+            try {
+                showNotification('✗ Error notification test', 'danger', 2000);
+                window.passTest('notif-2');
+                window.testLog('Error notification shown', 'info');
+            } catch (err) {
+                window.failTest('notif-2', err.message);
+            }
+        };
+
+        window.testNOTIF3 = () => {
+            window.runTest('notif-3');
+            try {
+                class CustomAdapter extends UIAdapter {
+                    showNotification(msg, type) {
+                        console.log(`[Custom] ${type}: ${msg}`);
+                    }
+                    toggleLoading() {}
+                    showFieldErrors() {}
+                    clearFieldErrors() {}
+                }
+                setUIAdapter(new CustomAdapter());
+                showNotification('Custom adapter test', 'info');
+                // Switch back to Tabler
+                setUIAdapter(new TablerUIAdapter());
+                window.passTest('notif-3');
+                window.testLog('Custom adapter works', 'success');
+            } catch (err) {
+                window.failTest('notif-3', err.message);
+            }
+        };
+
+        window.testFORM1 = () => {
+            window.runTest('form-1');
+            try {
+                const form = document.getElementById('demoForm');
+                if (form) {
+                    submitForm(form, {
+                        onSuccess: () => window.testLog('Form submission configured', 'info'),
+                        showSuccessNotification: false
+                    });
+                    window.passTest('form-1');
+                } else {
+                    window.failTest('form-1', 'Form not found');
+                }
+            } catch (err) {
+                window.failTest('form-1', err.message);
+            }
+        };
+
+        window.testFORM2 = () => {
+            window.runTest('form-2');
+            try {
+                const form = document.getElementById('demoForm');
+                const csrfInput = form.querySelector('input[name^="csrf_"]');
+                if (csrfInput && csrfInput.value) {
+                    window.passTest('form-2');
+                    window.testLog(`CSRF token attached: ${csrfInput.value}`, 'info');
+                } else {
+                    window.failTest('form-2', 'CSRF token not attached to form');
+                }
+            } catch (err) {
+                window.failTest('form-2', err.message);
+            }
+        };
+
+        window.testFORM3 = () => {
+            window.runTest('form-3');
+            try {
+                const form = document.getElementById('demoForm');
+                if (!form) {
+                    window.failTest('form-3', 'Form not found');
+                    return;
+                }
+
+                // Save original state
+                const originalAction = form.getAttribute('action');
+                form.setAttribute('action', '/api/form-error');
+
+                // Setup one-time submission handler
+                submitForm(form, {
+                    onError: (err) => {
+                        try {
+                            // Verify error response
+                            if (err.message === 'Validation Failed' && err.errors) {
+                                window.testLog('Validation error caught correctly', 'success');
+                                
+                                // Check if UI was updated (async check)
+                                setTimeout(() => {
+                                    const emailInput = form.querySelector('#email');
+                                    const emailFeedback = emailInput.parentElement.querySelector('.invalid-feedback');
+                                    
+                                    const subContainer = form.querySelector('[data-field-name="subscription"]');
+                                    const subFeedback = subContainer.nextElementSibling;
+
+                                    const termsInput = form.querySelector('[name="terms"]');
+                                    const termsFeedback = termsInput.parentElement.querySelector('.invalid-feedback');
+                                    
+                                    let passed = true;
+                                    let errorMsg = '';
+
+                                    if (!emailFeedback || emailFeedback.textContent !== 'Invalid email format' || emailFeedback.style.display === 'none') {
+                                        passed = false;
+                                        errorMsg += 'Email error missing. ';
+                                    }
+
+                                    if (!subFeedback || subFeedback.textContent !== 'Please select a subscription plan' || subFeedback.style.display === 'none') {
+                                        passed = false;
+                                        errorMsg += 'Subscription error missing. ';
+                                    }
+
+                                    if (!termsFeedback || termsFeedback.textContent !== 'You must agree to the terms' || termsFeedback.style.display === 'none') {
+                                        passed = false;
+                                        errorMsg += 'Terms error missing. ';
+                                    }
+
+                                    if (passed) {
+                                        window.passTest('form-3');
+                                        window.testLog('All field errors displayed correctly', 'success');
+                                    } else {
+                                        window.failTest('form-3', 'UI verification failed: ' + errorMsg);
+                                    }
+                                    
+                                    // Cleanup action immediately
+                                    if (originalAction) form.setAttribute('action', originalAction);
+                                    else form.removeAttribute('action');
+                                    
+                                    // Delay UI cleanup so user can see the error
+                                    setTimeout(() => {
+                                        form.reset();
+                                        // form.reset() now automatically clears all error styles via lib/form.js
+                                    }, 2000);
+                                }, 100);
+                            } else {
+                                window.failTest('form-3', 'Unexpected error response');
+                            }
+                        } catch (e) {
+                            window.failTest('form-3', e.message);
+                        }
+                    }
+                });
+
+                // Trigger submission
+                form.dispatchEvent(new Event('submit'));
+
+            } catch (err) {
+                window.failTest('form-3', err.message);
+            }
+        };
+
+        window.testFORM4 = () => {
+            window.runTest('form-4');
+            try {
+                const form = document.getElementById('demoForm');
+                if (!form) {
+                    window.failTest('form-4', 'Form not found');
+                    return;
+                }
+
+                // Save original state
+                const originalAction = form.getAttribute('action');
+                form.setAttribute('action', '/api/redirect-test');
+
+                // Mock window.location.href assignment
+                const originalLocation = window.location.href;
+                let redirectUrl = '';
+                
+                // We can't easily mock window.location.href setter in browser, 
+                // but we can check if the library tries to redirect.
+                // However, since we can't mock window.location in a real browser environment easily without causing a reload,
+                // we will rely on the library's behavior.
+                // A better approach for this test is to override the library's behavior or use a spy if possible.
+                // Since we are testing the library as a black box, we might need to accept that the page WILL redirect if we are not careful.
+                // BUT, the library uses window.location.href = ...
+                
+                // Let's use a trick: The library waits for redirectDelay. We can check if the success notification is shown
+                // and trust the library code for the actual redirect line, OR we can try to intercept it if we modify the library to use a helper.
+                // For this demo, we will just verify the success callback and the fact that it received the redirectUrl.
+                
+                submitForm(form, {
+                    redirectDelay: 500, // Short delay for test
+                    onSuccess: (data) => {
+                        if (data.redirectUrl && data.redirectUrl.includes('redirected=true')) {
+                            window.passTest('form-4');
+                            window.testLog(`Redirect URL received: ${data.redirectUrl}`, 'success');
+                            // Prevent actual redirect for test continuity
+                            // Note: This is tricky because the library sets a timeout to redirect.
+                            // We can't easily stop it from outside without modifying the library.
+                            // So for this test, we will just let it be and maybe the user sees a redirect?
+                            // Actually, let's just check if we got the right response data.
+                        } else {
+                            window.failTest('form-4', 'Redirect URL missing in response');
+                        }
+                    }
+                });
+                
+                // Trigger submission
+                form.dispatchEvent(new Event('submit'));
+                
+                // Restore action
+                setTimeout(() => {
+                    if (originalAction) form.setAttribute('action', originalAction);
+                    else form.removeAttribute('action');
+                }, 100);
+
+            } catch (err) {
+                window.failTest('form-4', err.message);
+            }
+        };
+
+        window.testFORM5 = () => {
+            window.runTest('form-5');
+            try {
+                const form = document.getElementById('demoForm');
+                if (!form) {
+                    window.failTest('form-5', 'Form not found');
+                    return;
+                }
+
+                const originalAction = form.getAttribute('action');
+                form.setAttribute('action', '/api/reload-test');
+
+                submitForm(form, {
+                    reloadAfterSuccess: true,
+                    reloadDelay: 500,
+                    onSuccess: (data) => {
+                        window.passTest('form-5');
+                        window.testLog('Reload configured successfully', 'success');
+                    }
+                });
+
+                form.dispatchEvent(new Event('submit'));
+
+                setTimeout(() => {
+                    if (originalAction) form.setAttribute('action', originalAction);
+                    else form.removeAttribute('action');
+                }, 100);
+
+            } catch (err) {
+                window.failTest('form-5', err.message);
+            }
+        };
+
+        window.testAJAX1 = () => {
+            window.runTest('ajax-1');
+            try {
+                ajaxRequest('/api/ajax-test', {
+                    method: 'POST',
+                    data: { foo: 'bar' },
+                    onSuccess: (data) => {
+                        window.testLog('AJAX POST success', 'success');
+                        window.passTest('ajax-1');
+                    },
+                    onError: (err) => {
+                        window.failTest('ajax-1', err.message);
+                    }
+                });
+            } catch (err) {
+                window.failTest('ajax-1', err.message);
+            }
+        };
+
+        window.testAJAX2 = () => {
+            window.runTest('ajax-2');
+            try {
+                // Mock confirm to return true automatically
+                const originalConfirm = window.confirm;
+                window.confirm = () => {
+                    window.testLog('Confirmation dialog triggered (mocked: true)', 'warn');
+                    return true;
+                };
+
+                ajaxRequest('/api/ajax-confirm', {
+                    method: 'DELETE',
+                    confirmMessage: 'Are you sure?',
+                    onSuccess: () => {
+                        window.passTest('ajax-2');
+                        // Restore confirm
+                        window.confirm = originalConfirm;
+                    }
+                });
+            } catch (err) {
+                window.failTest('ajax-2', err.message);
+            }
+        };
+
+        window.testAJAX3 = () => {
+            window.runTest('ajax-3');
+            try {
+                const btn = document.getElementById('deleteBtn');
+                if (btn) {
+                    // Trigger actual request to show loading state
+                    ajaxRequest('/api/loading-test', {
+                        method: 'POST',
+                        loadingTarget: '#deleteBtn',
+                        onSuccess: () => {
+                            window.testLog('Loading state test completed', 'success');
+                            window.passTest('ajax-3');
+                        }
+                    });
+                    window.testLog('Loading state triggered on "Delete Item" button', 'info');
+                }
+            } catch (err) {
+                window.failTest('ajax-3', err.message);
+            }
+        };
+
+        window.testAJAX4 = () => {
+            window.runTest('ajax-4');
+            try {
+                ajaxRequest('/api/redirect-test', {
+                    method: 'POST',
+                    redirectDelay: 2000,
+                    onSuccess: (data) => {
+                        if (data.redirectUrl) {
+                            window.passTest('ajax-4');
+                            window.testLog(`Redirect scheduled to: ${data.redirectUrl}`, 'success');
+                        } else {
+                            window.failTest('ajax-4', 'No redirect URL received');
+                        }
+                    },
+                    onError: (err) => window.failTest('ajax-4', err.message)
+                });
+            } catch (err) {
+                window.failTest('ajax-4', err.message);
+            }
+        };
+
+        window.testAJAX5 = () => {
+            window.runTest('ajax-5');
+            try {
+                ajaxRequest('/api/reload-test', {
+                    method: 'POST',
+                    reloadAfterSuccess: true,
+                    reloadDelay: 2000,
+                    onSuccess: (data) => {
+                        window.passTest('ajax-5');
+                        window.testLog('Reload scheduled', 'success');
+                    },
+                    onError: (err) => window.failTest('ajax-5', err.message)
+                });
+            } catch (err) {
+                window.failTest('ajax-5', err.message);
+            }
+        };
+
+        window.testDeleteAction = () => {
+            ajaxRequest('/api/items/1', {
+                method: 'DELETE',
+                confirmMessage: 'Delete this item permanently?',
+                loadingTarget: '#deleteBtn',
+                onSuccess: () => window.testLog('Delete operation would be completed', 'success'),
+                onCancel: () => window.testLog('Delete operation cancelled', 'warn')
+            });
+        };
+
+        window.testAjaxAction = () => {
+            ajaxRequest('/api/items/status', {
+                method: 'POST',
+                data: { id: 1, status: 'active' },
+                loadingTarget: event.target,
+                onSuccess: () => window.testLog('Status toggled successfully', 'success')
+            });
+        };
+
+        window.runAllTests = async () => {
+            window.testLog('=== Running all tests ===', 'info');
+            
+            // Run all tests sequentially
+            const tests = [
+                'http-1', 'http-2', 'http-3',
+                'csrf-1', 'csrf-2',
+                'notif-1', 'notif-2', 'notif-3',
+                'form-1', 'form-2', 'form-3',
+                'ajax-1', 'ajax-2', 'ajax-3'
+            ];
+
+            for (const test of tests) {
+                const [module, num] = test.split('-');
+                const fn = window[`test${module.toUpperCase()}${num}`];
+                if (fn) {
+                    await new Promise(resolve => {
+                        fn();
+                        setTimeout(resolve, 300);
+                    });
+                }
+            }
+
+            window.testLog('=== All tests completed ===', 'success');
+            updateSummary();
+        };
+
+        window.runCoreTests = async () => {
+            window.testLog('=== Running core tests only ===', 'info');
+            window.testHTTP1();
+            window.testCSRF1();
+            window.testNOTIF1();
+            window.testFORM1();
+            window.testLog('=== Core tests completed ===', 'success');
+            updateSummary();
+        };
+
+        window.clearConsole = () => {
+            document.getElementById('testConsole').innerHTML = '';
+            window.testLog('Console cleared', 'info');
+        };
+
+        function updateSummary() {
+            const passed = document.querySelectorAll('.test-case.pass').length;
+            const failed = document.querySelectorAll('.test-case.fail').length;
+            const total = document.querySelectorAll('.test-case').length;
+            const summary = document.getElementById('test-summary');
+            summary.innerHTML = `Passed: <span style="color: green;">${passed}</span> | Failed: <span style="color: red;">${failed}</span> | Total: ${total}`;
+        }
+
+        // Auto-update summary
+        setInterval(updateSummary, 500);
+
+        window.testLog('✓ Test suite loaded and ready', 'success');
+    </script>
+</body>
+</html>
