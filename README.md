@@ -22,6 +22,30 @@ lib/
 
 ## Quick Start
 
+### 0. Using jsDelivr (ESM, no bundling)
+
+Geminus.js is a native ESM library, so the simplest CDN usage is to import it directly from jsDelivr.
+
+**Recommended (pin a tag or commit for stability):**
+
+```html
+<script type="module">
+    import { submitForm, showNotification } from 'https://cdn.jsdelivr.net/gh/yonggang-xiao/geminus.js@v1.1.0/lib/index.js';
+
+    showNotification('Hello from jsDelivr', 'info', 2000);
+    submitForm('#myForm');
+</script>
+```
+
+**Alternatively (tracks main branch, not recommended for production):**
+
+```html
+<script type="module">
+    import { submitForm } from 'https://cdn.jsdelivr.net/gh/yonggang-xiao/geminus.js@main/lib/index.js';
+    submitForm('#myForm');
+</script>
+```
+
 ### 1. Using Tabler UI (Default)
 
 ```html
