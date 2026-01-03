@@ -215,14 +215,24 @@
                 <div class="test-result" id="result-notif-1"></div>
             </div>
             <div class="test-case" id="test-notif-2">
-                <div class="test-label">✓ Show error notification</div>
+                <div class="test-label">✓ Show info notification</div>
                 <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testNOTIF2()">Run</button>
                 <div class="test-result" id="result-notif-2"></div>
             </div>
             <div class="test-case" id="test-notif-3">
-                <div class="test-label">✓ Custom notification adapter</div>
+                <div class="test-label">✓ Show warning notification</div>
                 <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testNOTIF3()">Run</button>
                 <div class="test-result" id="result-notif-3"></div>
+            </div>
+            <div class="test-case" id="test-notif-4">
+                <div class="test-label">✓ Show danger notification</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testNOTIF4()">Run</button>
+                <div class="test-result" id="result-notif-4"></div>
+            </div>
+            <div class="test-case" id="test-notif-5">
+                <div class="test-label">✓ Custom notification adapter</div>
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="testNOTIF5()">Run</button>
+                <div class="test-result" id="result-notif-5"></div>
             </div>
         </div>
 
@@ -560,7 +570,7 @@
         window.testNOTIF1 = () => {
             window.runTest('notif-1');
             try {
-                showNotification('✓ Success notification test', 'success', 2000);
+                showNotification('Success notification test', 'success', 0);
                 window.passTest('notif-1');
                 window.testLog('Success notification shown', 'success');
             } catch (err) {
@@ -571,9 +581,9 @@
         window.testNOTIF2 = () => {
             window.runTest('notif-2');
             try {
-                showNotification('✗ Error notification test', 'danger', 2000);
+                showNotification('Info notification test', 'info', 2000);
                 window.passTest('notif-2');
-                window.testLog('Error notification shown', 'info');
+                window.testLog('Info notification shown', 'info');
             } catch (err) {
                 window.failTest('notif-2', err.message);
             }
@@ -581,6 +591,28 @@
 
         window.testNOTIF3 = () => {
             window.runTest('notif-3');
+            try {
+                showNotification('Warning notification test', 'warning', 2000);
+                window.passTest('notif-3');
+                window.testLog('Warning notification shown', 'warn');
+            } catch (err) {
+                window.failTest('notif-3', err.message);
+            }
+        };
+
+        window.testNOTIF4 = () => {
+            window.runTest('notif-4');
+            try {
+                showNotification('Danger notification test', 'danger', 2000);
+                window.passTest('notif-4');
+                window.testLog('Danger notification shown', 'info');
+            } catch (err) {
+                window.failTest('notif-4', err.message);
+            }
+        };
+
+        window.testNOTIF5 = () => {
+            window.runTest('notif-5');
             try {
                 class CustomAdapter extends UIAdapter {
                     showNotification(msg, type) {
@@ -594,10 +626,10 @@
                 showNotification('Custom adapter test', 'info');
                 // Switch back to Tabler
                 setUIAdapter(new TablerUIAdapter());
-                window.passTest('notif-3');
+                window.passTest('notif-5');
                 window.testLog('Custom adapter works', 'success');
             } catch (err) {
-                window.failTest('notif-3', err.message);
+                window.failTest('notif-5', err.message);
             }
         };
 
@@ -941,7 +973,7 @@
             const tests = [
                 'http-1', 'http-2', 'http-3',
                 'csrf-1', 'csrf-2',
-                'notif-1', 'notif-2', 'notif-3',
+                'notif-1', 'notif-2', 'notif-3', 'notif-4', 'notif-5',
                 'form-1', 'form-2', 'form-3',
                 'ajax-1', 'ajax-2', 'ajax-3'
             ];
@@ -966,6 +998,9 @@
             window.testHTTP1();
             window.testCSRF1();
             window.testNOTIF1();
+            window.testNOTIF2();
+            window.testNOTIF3();
+            window.testNOTIF4();
             window.testFORM1();
             window.testLog('=== Core tests completed ===', 'success');
             updateSummary();
